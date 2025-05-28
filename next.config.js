@@ -1,16 +1,21 @@
+// next.config.js
+
 const withPWA = require('next-pwa')({
   dest: 'public',
-  register: true,
-  skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
 });
 
-module.exports = withPWA({
+/** @type {import('next').NextConfig} */
+const nextConfig = {
   reactStrictMode: true,
   experimental: {
     appDir: true,
   },
   images: {
-    domains: [],
+    domains: [
+      // Add external image domains here if needed
+    ],
   },
-});
+};
+
+module.exports = withPWA(nextConfig);
