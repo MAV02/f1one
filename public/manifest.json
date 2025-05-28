@@ -1,0 +1,17 @@
+{
+  "name": "ONEF1",
+  "short_name": "ONEF1",
+  "description": "Live F1 strategy alerts and race analytics",
+  "icons": [
+    {
+      "src": "/faceicon.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ],
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#000000",
+  "theme_color": "#e10600",
+  "orientation": "portrait"
+}
