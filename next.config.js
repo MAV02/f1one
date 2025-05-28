@@ -2,6 +2,8 @@
 
 const withPWA = require('next-pwa')({
   dest: 'public',
+  register: true,
+  skipWaiting: true,
   disable: process.env.NODE_ENV === 'development',
 });
 
@@ -12,9 +14,7 @@ const nextConfig = {
     appDir: true,
   },
   images: {
-    domains: [
-      // Add external image domains here if needed
-    ],
+    domains: [],
   },
 };
 
