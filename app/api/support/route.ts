@@ -1,38 +1,31 @@
-import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
-  const formData = await req.formData();
-  const email = formData.get('email')?.toString() || '';
-  const message = formData.get('message')?.toString() || '';
-  const file = formData.get('file') as File | null;
-
-  const attachments = [];
-
-  if (file) {
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
-    attachments.push({
-      filename: file.name,
-      content: buffer,
-    });
-  }
+  const { email, subject, message } = await req.json();
 
   const transporter = nodemailer.createTransport({
-    service: 'gmail',
+    host: process.env.SMTP_HOST,
+    port: Number(process.env.SMTP_PORT),
+    secure: false,
     auth: {
-      user: 'm_vold92@hotmail.com',
-      pass: 'Mavold1992!!!'
+      user: process.env.SMTP_USER,
+      pass: process.env.SMTP_PASS,
     },
   });
 
-  await transporter.sendMail({
-    from: email,
-    to: 'm.vold@me.com',
-    subject: 'ONEF1 Support Ticket',
-    text: message,
-    attachments,
-  });
+  try {
+    await transporter.sendMail({
+      from: process.env.SUPPORT_EMAIL,
+      to: process.env.SUPPORT_EMAIL,
+      subject: `[Support] ${subject}`,
+      text: `From: ${email}
 
-  return NextResponse.json({ success: true });
+${message}`,
+    });
+
+    return NextResponse.json({ success: true });
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 500 });
+  }
 }

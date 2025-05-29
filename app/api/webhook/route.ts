@@ -1,29 +1,35 @@
-// Stripe production key required here
-import { headers } from 'next/headers';
-import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
+import { buffer } from 'micro';
+import { NextRequest, NextResponse } from 'next/server';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, { apiVersion: '2022-11-15' });
+export const config = { api: { bodyParser: false } };
 
-export async function POST(req: Request) {
-  const body = await req.text();
-  const sig = headers().get('stripe-signature') || '';
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
+  apiVersion: '2023-10-16',
+});
 
-  let event: Stripe.Event;
+const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET!;
+
+export async function POST(req: NextRequest) {
+  const rawBody = await req.text();
+  const sig = req.headers.get('stripe-signature')!;
+
+  let event;
 
   try {
-    event = stripe.webhooks.constructEvent(body, sig, process.env.STRIPE_WEBHOOK_SECRET!);
+    event = stripe.webhooks.constructEvent(rawBody, sig, endpointSecret);
   } catch (err: any) {
-    console.error('Webhook signature verification failed.', err.message);
-    return new NextResponse(`Webhook Error: ${err.message}`, { status: 400 });
+    return new Response(`Webhook Error: ${err.message}`, { status: 400 });
   }
 
-  if (event.type === 'checkout.session.completed') {
-    const session = event.data.object as Stripe.Checkout.Session;
-    const email = session.customer_email;
-    // console.log (removed for production)(`✅ Pro subscription confirmed for ${email}`);
-    // You could persist this to Firestore and/or set a cookie via client on redirect
+  // Handle the event (subscription_created, etc.)
+  switch (event.type) {
+    case 'checkout.session.completed':
+      console.log('Checkout session completed:', event.data.object);
+      break;
+    default:
+      console.log(`Unhandled event type ${event.type}`);
   }
 
-  return new NextResponse('Webhook received', { status: 200 });
+  return NextResponse.json({ received: true });
 }
