@@ -1,23 +1,29 @@
-const isClient = typeof window !== 'undefined';
+'use client';
 
-export const generateReport = async (
-  content: string,
+import { ref, uploadBytes } from 'firebase/storage';
+import { storage } from '@/lib/firebase';
+import ReportDocument from '@/components/pdf/ReportDocument';
+import { pdf } from '@react-pdf/renderer';
+import { getDownloadURL } from 'firebase/storage';
+
+export const generateAndUploadReport = async (
   title: string,
-  fileName: string
-) => {
-  if (!isClient) return;
+  content: string,
+  userEmail: string,
+  track: string,
+  driver: string
+): Promise<string> => {
+  const blob = await pdf(
+    <ReportDocument title={title} content={content} />
+  ).toBlob();
 
-  const html2pdf = (await import('html2pdf.js')).default;
-  const element = document.createElement('div');
-  element.innerHTML = `<h1>${title}</h1><div>${content}</div>`;
+  const timestamp = Date.now();
+  const sanitizedEmail = userEmail.replace(/[^a-zA-Z0-9]/g, '_');
+  const filename = `report_${sanitizedEmail}_${track}_${driver}_${timestamp}.pdf`;
 
-  const opt = {
-    margin: 0.5,
-    filename: `${fileName}.pdf`,
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-  };
+  const fileRef = ref(storage, `reports/${filename}`);
+  await uploadBytes(fileRef, blob);
 
-  html2pdf().from(element).set(opt).save();
+  const downloadURL = await getDownloadURL(fileRef);
+  return downloadURL;
 };

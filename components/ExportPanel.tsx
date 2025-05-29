@@ -1,64 +1,44 @@
 'use client';
 
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
 import ReportDocument from '@/components/pdf/ReportDocument';
-import { generateReport } from '@/lib/pdf/generateReport';
 
-interface ExportPanelProps {
+type ExportPanelProps = {
   title: string;
   content: string;
-  isPro: boolean;
-  track?: string;
-  driver?: string;
-}
+};
 
-export default function ExportPanel({
-  title,
-  content,
-  isPro,
-  track,
-  driver,
-}: ExportPanelProps) {
-  const [fileName, setFileName] = useState('session_report');
+const ExportPanel: React.FC<ExportPanelProps> = ({ title, content }) => {
+  const [isReady, setIsReady] = useState(false);
 
-  const handleExport = async () => {
-    await generateReport(content, title, fileName);
+  const handleGenerateClick = () => {
+    setIsReady(true);
   };
 
   return (
-    <div className="space-y-4">
-      <input
-        type="text"
-        value={fileName}
-        onChange={(e) => setFileName(e.target.value)}
-        placeholder="Enter file name"
-        className="w-full p-2 rounded bg-gray-800 text-white"
-      />
-      <div className="flex gap-2">
+    <div className="bg-zinc-900 p-6 rounded-lg shadow-lg text-white space-y-4">
+      <h2 className="text-xl font-bold">Export Report</h2>
+      {!isReady ? (
         <button
-          onClick={handleExport}
-          className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          onClick={handleGenerateClick}
+          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
         >
-          Export as PDF (html2pdf.js)
+          Generate PDF
         </button>
+      ) : (
         <PDFDownloadLink
-          document={
-            <ReportDocument
-              title={title}
-              content={content}
-              isPro={isPro}
-              track={track}
-              driver={driver}
-            />
-          }
-          fileName={`${fileName}_react.pdf`}
+          document={<ReportDocument title={title} content={content} />}
+          fileName="f1-report.pdf"
+          className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded inline-block"
         >
           {({ loading }) =>
-            loading ? 'Loading document...' : 'Download PDF (React)'
+            loading ? 'Preparing document...' : 'Download PDF'
           }
         </PDFDownloadLink>
-      </div>
+      )}
     </div>
   );
-}
+};
+
+export default ExportPanel;
