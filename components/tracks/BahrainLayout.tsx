@@ -1,20 +1,21 @@
-interface LayoutProps {
-  session: string;
-}
-
 import React from 'react';
 
-interface Props {
+type BahrainLayoutProps = {
   session: string;
-}
+};
 
-export default function BahrainLayout({ session }: Props) {
+const BahrainLayout: React.FC<BahrainLayoutProps> = ({
+  session,
+}) => {
   return (
-    <div className="track-layout">
-      <svg viewBox="0 0 100 100" className="w-full h-auto text-white">
-        <path d="M10,10 C30,30 70,30 90,10" stroke="currentColor" strokeWidth="2" fill="none" />
-        <text x="50%" y="95%" textAnchor="middle" fontSize="5" fill="currentColor">Bahrain Circuit - {session}</text>
-      </svg>
+    <div className="rounded-md border p-4 shadow-md bg-gray-900 text-white">
+      <h3 className="text-lg font-semibold mb-2">Bahrain Circuit</h3>
+      <p className="text-sm">Session: {session}</p>
+      <div className="mt-4 h-40 bg-gray-800 flex items-center justify-center text-gray-400">
+        Track map preview coming soon...
+      </div>
     </div>
   );
-}
+};
+
+export default BahrainLayout;
