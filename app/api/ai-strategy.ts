@@ -1,10 +1,13 @@
+// app/api/ai-strategy.ts
 
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const { messages } = await req.json();
 
-  const prompt = messages.map((m: any) => \`\${m.role === 'user' ? 'User' : 'Assistant'}: \${m.content}\`).join('\n');
+  const prompt = messages
+    .map((m: any) => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`)
+    .join('\n');
 
   const openaiRes = await fetch('https://api.openai.com/v1/chat/completions', {
     method: 'POST',
@@ -14,10 +17,11 @@ export async function POST(req: Request) {
     },
     body: JSON.stringify({
       model: 'gpt-4',
-      messages: [{ role: 'system', content: 'You are a helpful assistant.' }, ...messages],
+      messages: [{ role: 'system', content: 'You are an expert AI strategist.' }, ...messages],
+      temperature: 0.7,
     }),
   });
 
-  const data = await openaiRes.json();
-  return NextResponse.json(data);
+  const json = await openaiRes.json();
+  return NextResponse.json(json);
 }
