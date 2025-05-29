@@ -2,35 +2,22 @@
 
 import ReportDocument from '@/lib/pdf/ReportDocument';
 import React from 'react';
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  StyleSheet,
-  Font,
-} from '@react-pdf/renderer';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
-// Optional: Register a custom font or use built-in fonts
-// Font.register({ family: 'Roboto', src: 'https://fonts.gstatic.com/s/roboto/v27/KFOmCnqEu92Fr1Mu4mxM.woff2' });
-
-type Props = {
+type ReportDocumentProps = {
   title: string;
   content: string;
+  isPro: boolean;
 };
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: 30,
+    fontFamily: 'Helvetica',
     fontSize: 12,
-    backgroundColor: '#fff',
-    color: '#000',
   },
-  section: {
-    marginBottom: 20,
-  },
-  heading: {
-    fontSize: 20,
+  title: {
+    fontSize: 18,
     marginBottom: 10,
     fontWeight: 'bold',
   },
@@ -38,17 +25,19 @@ const styles = StyleSheet.create({
     fontSize: 12,
     lineHeight: 1.6,
   },
+  proNote: {
+    marginTop: 20,
+    fontSize: 10,
+    color: 'gray',
+  },
 });
 
-const ReportDocument: React.FC<Props> = ({ title, content }) => (
+const ReportDocument: React.FC<ReportDocumentProps> = ({ title, content, isPro }) => (
   <Document>
     <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Text style={styles.heading}>{title}</Text>
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.content}>{content}</Text>
-      </View>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.content}>{content}</Text>
+      {isPro && <Text style={styles.proNote}>Exported using PRO account</Text>}
     </Page>
   </Document>
 );

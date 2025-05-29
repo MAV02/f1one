@@ -1,4 +1,4 @@
-// components/ExportPanel.tsx
+'use client';
 
 import React, { useState } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
@@ -16,7 +16,7 @@ const ExportPanel: React.FC<ExportPanelProps> = ({ title, content, isPro }) => {
   return (
     <div className="p-4 rounded-md border bg-gray-900 text-white shadow-md">
       <h2 className="text-lg font-semibold mb-2">Export Panel</h2>
-      <p className="mb-4 text-sm text-gray-300">Click below to download your report as PDF.</p>
+      <p className="mb-4 text-sm text-gray-300">Click below to download your report as a PDF.</p>
       <PDFDownloadLink
         document={<ReportDocument title={title} content={content} isPro={isPro} />}
         fileName={filename}
