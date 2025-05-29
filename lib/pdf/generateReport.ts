@@ -1,24 +1,30 @@
-const html2pdf = (await import('html2pdf.js')).default;
 import { ref, uploadBytes } from 'firebase/storage';
 import { storage } from '@/lib/firebase';
 import ReportDocument from '@/components/pdf/ReportDocument';
 
-const generateAndUploadReport = async ({
-  title,
-  content,
-  isPro,
-  uid,
-}: {
-  title: string;
-  content: string;
-  isPro: boolean;
-  uid: string;
-}) => {
-  const blob = await pdf(<ReportDocument title={title} content={content} isPro={isPro} />).toBlob();
-  const filename = `report-${Date.now()}.pdf`;
-  const storageRef = ref(storage, `exports/${uid}/${filename}`);
-  await uploadBytes(storageRef, blob);
-  return filename;
-};
+export const generateAndUploadPDF = async (
+  contentRef: React.RefObject<HTMLElement>,
+  title: string,
+  track: string,
+  driver: string
+) => {
+  if (typeof window === 'undefined') return;
 
-export { generateAndUploadReport };
+  const html2pdf = (await import('html2pdf.js')).default;
+
+  if (!contentRef.current) return;
+
+  const element = contentRef.current;
+  const opt = {
+    margin: 0,
+    filename: `${title}.pdf`,
+    image: { type: 'jpeg', quality: 0.98 },
+    html2canvas: { scale: 2 },
+    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
+  };
+
+  const pdfBlob: Blob = await html2pdf().from(element).set(opt).outputPdf('blob');
+
+  const storageRef = ref(storage, `pdfs/${title}.pdf`);
+  await uploadBytes(storageRef, pdfBlob);
+};
