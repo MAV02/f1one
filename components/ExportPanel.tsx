@@ -27,7 +27,7 @@ export default function ExportPanel({
       {ready && (
         <PDFDownloadLink
           document={
-            <ReportDocument
+            <ReportDocument title={title} content={content} isPro={isPro}
               title={title}
               content={content}
               track={track}

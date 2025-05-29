@@ -1,41 +1,50 @@
-import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { useState } from 'react';
+import { PDFDownloadLink } from '@react-pdf/renderer';
+import ReportDocument from './ReportDocument';
 
-type ReportDocumentProps = {
+interface ExportPanelProps {
   title: string;
   content: string;
   isPro: boolean;
-  track?: string;
-  driver?: string;
-};
+  track: string;
+  driver: string;
+}
 
-const styles = StyleSheet.create({
-  page: { padding: 30 },
-  section: { marginBottom: 10 },
-  title: { fontSize: 20, marginBottom: 10 },
-  content: { fontSize: 12 },
-  pro: { fontSize: 12, color: 'green', marginTop: 10 },
-  info: { fontSize: 12, marginTop: 10 }
-});
-
-const ReportDocument: React.FC<ReportDocumentProps> = ({
+export default function ExportPanel({
   title,
   content,
   isPro,
   track,
-  driver
-}) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Text style={styles.title}>{title}</Text>
-        <Text style={styles.content}>{content}</Text>
-        {isPro && <Text style={styles.pro}>Pro Report</Text>}
-        {track && <Text style={styles.info}>Track: {track}</Text>}
-        {driver && <Text style={styles.info}>Driver: {driver}</Text>}
-      </View>
-    </Page>
-  </Document>
-);
+  driver,
+}: ExportPanelProps) {
+  const [ready, setReady] = useState(false);
 
-export default ReportDocument;
+  return (
+    <div className="mt-4">
+      <button
+        onClick={() => setReady(true)}
+        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 text-sm"
+      >
+        Prepare PDF
+      </button>
+
+      {ready && (
+        <PDFDownloadLink
+          document={
+            <ReportDocument
+              title={title}
+              content={content}
+              isPro={isPro}
+              track={track}
+              driver={driver}
+            />
+          }
+          fileName={`ONEF1_${track}_summary.pdf`}
+          className="text-sm underline text-blue-400 block mt-2"
+        >
+          {({ loading }) => (loading ? 'Loading document...' : 'Download PDF')}
+        </PDFDownloadLink>
+      )}
+    </div>
+  );
+}
