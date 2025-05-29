@@ -1,3 +1,7 @@
+interface LayoutProps {
+  session: string;
+}
+
 import React from 'react';
 
 export default function SingaporeLayout() {
