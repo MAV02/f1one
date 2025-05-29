@@ -1,65 +1,69 @@
+'use client';
+
 import React from 'react';
 import BahrainLayout from './tracks/BahrainLayout';
-import Saudi_arabiaLayout from './tracks/Saudi_arabiaLayout';
+import SaudiArabiaLayout from './tracks/SaudiArabiaLayout';
 import AustraliaLayout from './tracks/AustraliaLayout';
 import JapanLayout from './tracks/JapanLayout';
 import ChinaLayout from './tracks/ChinaLayout';
 import MiamiLayout from './tracks/MiamiLayout';
-import ImolaLayout from './tracks/ImolaLayout';
+import EmiliaRomagnaLayout from './tracks/EmiliaRomagnaLayout';
 import MonacoLayout from './tracks/MonacoLayout';
 import CanadaLayout from './tracks/CanadaLayout';
 import SpainLayout from './tracks/SpainLayout';
 import AustriaLayout from './tracks/AustriaLayout';
-import Great_britainLayout from './tracks/Great_britainLayout';
+import BritainLayout from './tracks/BritainLayout';
 import HungaryLayout from './tracks/HungaryLayout';
 import BelgiumLayout from './tracks/BelgiumLayout';
 import NetherlandsLayout from './tracks/NetherlandsLayout';
 import ItalyLayout from './tracks/ItalyLayout';
 import AzerbaijanLayout from './tracks/AzerbaijanLayout';
 import SingaporeLayout from './tracks/SingaporeLayout';
-import UsaLayout from './tracks/UsaLayout';
+import USA_AustinLayout from './tracks/USA_AustinLayout';
 import MexicoLayout from './tracks/MexicoLayout';
 import BrazilLayout from './tracks/BrazilLayout';
-import Las_vegasLayout from './tracks/Las_vegasLayout';
+import LasVegasLayout from './tracks/LasVegasLayout';
 import QatarLayout from './tracks/QatarLayout';
-import Abu_dhabiLayout from './tracks/Abu_dhabiLayout';
-
-const layouts = {
-  Bahrain: BahrainLayout,
-  Saudi_arabia: Saudi_arabiaLayout,
-  Australia: AustraliaLayout,
-  Japan: JapanLayout,
-  China: ChinaLayout,
-  Miami: MiamiLayout,
-  Imola: ImolaLayout,
-  Monaco: MonacoLayout,
-  Canada: CanadaLayout,
-  Spain: SpainLayout,
-  Austria: AustriaLayout,
-  Great_britain: Great_britainLayout,
-  Hungary: HungaryLayout,
-  Belgium: BelgiumLayout,
-  Netherlands: NetherlandsLayout,
-  Italy: ItalyLayout,
-  Azerbaijan: AzerbaijanLayout,
-  Singapore: SingaporeLayout,
-  Usa: UsaLayout,
-  Mexico: MexicoLayout,
-  Brazil: BrazilLayout,
-  Las_vegas: Las_vegasLayout,
-  Qatar: QatarLayout,
-  Abu_dhabi: Abu_dhabiLayout,
-};
+import AbuDhabiLayout from './tracks/AbuDhabiLayout';
 
 type TrackMapProps = {
-  currentTrack: keyof typeof layouts;
+  currentTrack: string;
 };
 
 export default function TrackMap({ currentTrack }: TrackMapProps) {
-  const Layout = layouts[currentTrack] || (() => <div>No layout found.</div>);
+  const renderTrackLayout = () => {
+    switch (currentTrack) {
+      case 'Bahrain': return <BahrainLayout />;
+      case 'Saudi Arabia': return <SaudiArabiaLayout />;
+      case 'Australia': return <AustraliaLayout />;
+      case 'Japan': return <JapanLayout />;
+      case 'China': return <ChinaLayout />;
+      case 'Miami': return <MiamiLayout />;
+      case 'Emilia Romagna': return <EmiliaRomagnaLayout />;
+      case 'Monaco': return <MonacoLayout />;
+      case 'Canada': return <CanadaLayout />;
+      case 'Spain': return <SpainLayout />;
+      case 'Austria': return <AustriaLayout />;
+      case 'Britain': return <BritainLayout />;
+      case 'Hungary': return <HungaryLayout />;
+      case 'Belgium': return <BelgiumLayout />;
+      case 'Netherlands': return <NetherlandsLayout />;
+      case 'Italy': return <ItalyLayout />;
+      case 'Azerbaijan': return <AzerbaijanLayout />;
+      case 'Singapore': return <SingaporeLayout />;
+      case 'USA (Austin)': return <USA_AustinLayout />;
+      case 'Mexico': return <MexicoLayout />;
+      case 'Brazil': return <BrazilLayout />;
+      case 'Las Vegas': return <LasVegasLayout />;
+      case 'Qatar': return <QatarLayout />;
+      case 'Abu Dhabi': return <AbuDhabiLayout />;
+      default: return <div className="text-gray-400 text-sm">No track layout available.</div>;
+    }
+  };
+
   return (
-    <div className="track-map-wrapper p-4 bg-gray-900 rounded-xl shadow-md">
-      <Layout />
+    <div className="w-full max-w-3xl mx-auto p-4">
+      {renderTrackLayout()}
     </div>
   );
 }
