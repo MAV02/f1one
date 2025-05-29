@@ -1,25 +1,23 @@
-'use client';
+// components/SessionSwitcher.tsx
 import React from 'react';
 
-const SessionSwitcher = () => {
-  const options = ['FP1', 'FP2', 'FP3', 'Quali', 'Race'];
-  const [selected, setSelected] = React.useState('FP1');
+type Props = {
+  session: string;
+  setSession: (value: string) => void;
+};
 
+export default function SessionSwitcher({ session, setSession }: Props) {
   return (
-    <div className="flex space-x-2 mt-4 md:mt-0">
-      {options.map((opt) => (
+    <div className="flex gap-2">
+      {['Practice', 'Qualifying', 'Race'].map((option) => (
         <button
-          key={opt}
-          onClick={() => setSelected(opt)}
-          className={`px-4 py-2 rounded-full text-sm font-medium border ${
-            selected === opt ? 'bg-white text-black' : 'bg-transparent text-white border-white'
-          }`}
+          key={option}
+          className={`px-4 py-2 rounded ${session === option ? 'bg-white text-black' : 'bg-gray-800 text-white'}`}
+          onClick={() => setSession(option)}
         >
-          {opt}
+          {option}
         </button>
       ))}
     </div>
   );
-};
-
-export default SessionSwitcher;
+}
