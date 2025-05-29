@@ -1,39 +1,32 @@
-'use client';
+import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
 
-import { useState } from 'react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
-import ReportDocument from '@/lib/pdf/ReportDocument';
-
-interface ExportPanelProps {
+interface ReportProps {
   title: string;
   content: string;
   isPro: boolean;
-  track: string;
-  driver: string;
+  track?: string;
+  driver?: string;
 }
 
-export default function ExportPanel({ title, content, isPro, track, driver }: ExportPanelProps) {
-  const [isReady, setIsReady] = useState(false);
+const styles = StyleSheet.create({
+  page: { padding: 30 },
+  title: { fontSize: 18, marginBottom: 10 },
+  content: { fontSize: 12 },
+});
 
-  return (
-    <div className="p-4 rounded-md border bg-gray-900 text-white shadow-md">
-      <h2 className="text-lg font-semibold mb-2">Export Report</h2>
-      <p className="text-sm mb-4">Generate a PDF with session data</p>
-      <PDFDownloadLink
-        document={
-          <ReportDocument
-            title={title}
-            content={content}
-            isPro={isPro}
-            track={track}
-            driver={driver}
-          />
-        }
-        fileName={`${title.replace(/\s+/g, '_').toLowerCase()}.pdf`}
-        className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded"
-      >
-        {({ loading }) => (loading ? 'Preparing document...' : 'Download PDF')}
-      </PDFDownloadLink>
-    </div>
-  );
-}
+const ReportDocument = ({ title, content, isPro, track, driver }: ReportProps) => (
+  <Document>
+    <Page size="A4" style={styles.page}>
+      <Text style={styles.title}>{title}</Text>
+      <Text style={styles.content}>{content}</Text>
+      {isPro && (
+        <>
+          {track && <Text>Track: {track}</Text>}
+          {driver && <Text>Driver: {driver}</Text>}
+        </>
+      )}
+    </Page>
+  </Document>
+);
+
+export default ReportDocument;
