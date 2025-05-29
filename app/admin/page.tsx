@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getSession, signOut, Session } from 'next-auth/react';
+import { getSession, signOut } from 'next-auth/react';
+import type { Session } from 'next-auth';
 
 export default function AdminPage() {
   const [session, setSession] = useState<Session | null>(null);
@@ -14,7 +15,7 @@ export default function AdminPage() {
       if (!sess) {
         router.push('/');
       } else {
-        setSession(sess); // ✅ Fixed: Session or null
+        setSession(sess);
       }
     };
 
