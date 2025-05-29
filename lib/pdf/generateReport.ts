@@ -1,29 +1,43 @@
-'use client';
+// lib/pdf/generateReport.ts
 
-import { ref, uploadBytes } from 'firebase/storage';
-import { storage } from '@/lib/firebase';
-import ReportDocument from '@/components/pdf/ReportDocument';
-import { pdf } from '@react-pdf/renderer';
-import { getDownloadURL } from 'firebase/storage';
+import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { initializeApp } from 'firebase/app';
+import { getFirestore, doc, setDoc } from 'firebase/firestore';
+import { jsPDF } from 'jspdf';
+import { firebaseConfig } from '@/lib/firebase';
 
-export const generateAndUploadReport = async (
+// Initialize Firebase only once
+const app = initializeApp(firebaseConfig);
+const storage = getStorage(app);
+const db = getFirestore(app);
+
+export async function generateAndUploadReport(
   title: string,
   content: string,
-  userEmail: string,
-  track: string,
-  driver: string
-): Promise<string> => {
-  const blob = await pdf(
-    <ReportDocument title={title} content={content} />
-  ).toBlob();
+  isPro: boolean,
+  uid: string,
+  fileName: string
+): Promise<string> {
+  const docPdf = new jsPDF();
+  docPdf.setFontSize(16);
+  docPdf.text(title, 20, 20);
+  docPdf.setFontSize(12);
+  docPdf.text(content, 20, 40);
 
-  const timestamp = Date.now();
-  const sanitizedEmail = userEmail.replace(/[^a-zA-Z0-9]/g, '_');
-  const filename = `report_${sanitizedEmail}_${track}_${driver}_${timestamp}.pdf`;
+  const pdfBlob = docPdf.output('blob');
 
-  const fileRef = ref(storage, `reports/${filename}`);
-  await uploadBytes(fileRef, blob);
+  const storageRef = ref(storage, `reports/${uid}/${fileName}`);
+  const snapshot = await uploadBytes(storageRef, pdfBlob);
+  const downloadURL = await getDownloadURL(snapshot.ref);
 
-  const downloadURL = await getDownloadURL(fileRef);
+  // Optional: Save metadata to Firestore
+  await setDoc(doc(db, 'reports', `${uid}_${Date.now()}`), {
+    title,
+    isPro,
+    uid,
+    downloadURL,
+    createdAt: new Date().toISOString(),
+  });
+
   return downloadURL;
-};
+}
