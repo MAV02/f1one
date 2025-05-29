@@ -14,7 +14,7 @@ export default function ExportButton({ title, content }: { title: string; conten
 
     try {
       setLoading(true);
-      await generateAndUploadReport({ title, content, isPro: true, uid: session.user.id });
+      await generateAndUploadReport(title, content, true, session.user.id, 'report.pdf');
       alert('Exported successfully!');
     } catch (err) {
       console.error('Export failed:', err);
