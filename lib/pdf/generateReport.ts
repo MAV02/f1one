@@ -1,4 +1,4 @@
-import pdf from 'html2pdf.js';
+const html2pdf = (await import('html2pdf.js')).default;
 import { ref, uploadBytes } from 'firebase/storage';
 import { storage } from '@/lib/firebase';
 import ReportDocument from '@/components/pdf/ReportDocument';
