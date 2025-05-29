@@ -1,42 +1,29 @@
-'use client';
+// components/ExportPanel.tsx
 
 import React, { useState } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import ReportDocument from '@/components/pdf/ReportDocument';
+import ReportDocument from '@/lib/pdf/ReportDocument';
 
 type ExportPanelProps = {
   title: string;
   content: string;
+  isPro: boolean;
 };
 
-const ExportPanel: React.FC<ExportPanelProps> = ({ title, content }) => {
-  const [isReady, setIsReady] = useState(false);
-
-  const handleGenerateClick = () => {
-    setIsReady(true);
-  };
+const ExportPanel: React.FC<ExportPanelProps> = ({ title, content, isPro }) => {
+  const [filename] = useState('report.pdf');
 
   return (
-    <div className="bg-zinc-900 p-6 rounded-lg shadow-lg text-white space-y-4">
-      <h2 className="text-xl font-bold">Export Report</h2>
-      {!isReady ? (
-        <button
-          onClick={handleGenerateClick}
-          className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded"
-        >
-          Generate PDF
-        </button>
-      ) : (
-        <PDFDownloadLink
-          document={<ReportDocument title={title} content={content} />}
-          fileName="f1-report.pdf"
-          className="bg-green-600 hover:bg-green-700 text-white py-2 px-4 rounded inline-block"
-        >
-          {({ loading }) =>
-            loading ? 'Preparing document...' : 'Download PDF'
-          }
-        </PDFDownloadLink>
-      )}
+    <div className="p-4 rounded-md border bg-gray-900 text-white shadow-md">
+      <h2 className="text-lg font-semibold mb-2">Export Panel</h2>
+      <p className="mb-4 text-sm text-gray-300">Click below to download your report as PDF.</p>
+      <PDFDownloadLink
+        document={<ReportDocument title={title} content={content} isPro={isPro} />}
+        fileName={filename}
+        className="inline-block px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded text-white text-sm"
+      >
+        {({ loading }) => (loading ? 'Preparing document...' : 'Download PDF')}
+      </PDFDownloadLink>
     </div>
   );
 };
