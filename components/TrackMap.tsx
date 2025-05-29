@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import BahrainLayout from './tracks/BahrainLayout';
 import SaudiArabiaLayout from './tracks/SaudiArabiaLayout';
@@ -27,43 +25,37 @@ import QatarLayout from './tracks/QatarLayout';
 import AbuDhabiLayout from './tracks/AbuDhabiLayout';
 
 type TrackMapProps = {
-  currentTrack: string;
+  session: string;
 };
 
-export default function TrackMap({ currentTrack }: TrackMapProps) {
-  const renderTrackLayout = () => {
-    switch (currentTrack) {
-      case 'Bahrain': return <BahrainLayout />;
-      case 'Saudi Arabia': return <SaudiArabiaLayout />;
-      case 'Australia': return <AustraliaLayout />;
-      case 'Japan': return <JapanLayout />;
-      case 'China': return <ChinaLayout />;
-      case 'Miami': return <MiamiLayout />;
-      case 'Emilia Romagna': return <EmiliaRomagnaLayout />;
-      case 'Monaco': return <MonacoLayout />;
-      case 'Canada': return <CanadaLayout />;
-      case 'Spain': return <SpainLayout />;
-      case 'Austria': return <AustriaLayout />;
-      case 'Britain': return <BritainLayout />;
-      case 'Hungary': return <HungaryLayout />;
-      case 'Belgium': return <BelgiumLayout />;
-      case 'Netherlands': return <NetherlandsLayout />;
-      case 'Italy': return <ItalyLayout />;
-      case 'Azerbaijan': return <AzerbaijanLayout />;
-      case 'Singapore': return <SingaporeLayout />;
-      case 'USA (Austin)': return <USA_AustinLayout />;
-      case 'Mexico': return <MexicoLayout />;
-      case 'Brazil': return <BrazilLayout />;
-      case 'Las Vegas': return <LasVegasLayout />;
-      case 'Qatar': return <QatarLayout />;
-      case 'Abu Dhabi': return <AbuDhabiLayout />;
-      default: return <div className="text-gray-400 text-sm">No track layout available.</div>;
-    }
-  };
-
+export default function TrackMap({ session }: TrackMapProps) {
   return (
-    <div className="w-full max-w-3xl mx-auto p-4">
-      {renderTrackLayout()}
+    <div className="space-y-4">
+      <h2 className="text-xl font-semibold">Track Maps</h2>
+      <BahrainLayout session={session} />
+      <SaudiArabiaLayout session={session} />
+      <AustraliaLayout session={session} />
+      <JapanLayout session={session} />
+      <ChinaLayout session={session} />
+      <MiamiLayout session={session} />
+      <EmiliaRomagnaLayout session={session} />
+      <MonacoLayout session={session} />
+      <CanadaLayout session={session} />
+      <SpainLayout session={session} />
+      <AustriaLayout session={session} />
+      <BritainLayout session={session} />
+      <HungaryLayout session={session} />
+      <BelgiumLayout session={session} />
+      <NetherlandsLayout session={session} />
+      <ItalyLayout session={session} />
+      <AzerbaijanLayout session={session} />
+      <SingaporeLayout session={session} />
+      <USA_AustinLayout session={session} />
+      <MexicoLayout session={session} />
+      <BrazilLayout session={session} />
+      <LasVegasLayout session={session} />
+      <QatarLayout session={session} />
+      <AbuDhabiLayout session={session} />
     </div>
   );
 }
