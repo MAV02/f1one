@@ -1,36 +1,40 @@
-
 'use client';
 
 import { useEffect, useState } from 'react';
-import { getServerSession } from 'next-auth';
-import { authOptions } from '@/lib/auth';
 import { useRouter } from 'next/navigation';
+import { getSession, signOut, Session } from 'next-auth/react';
 
 export default function AdminPage() {
-  const [session, setSession] = useState(null);
+  const [session, setSession] = useState<Session | null>(null);
   const router = useRouter();
 
   useEffect(() => {
-    async function fetchSession() {
-      const sess = await getServerSession(authOptions);
+    const fetchSession = async () => {
+      const sess = await getSession();
       if (!sess) {
         router.push('/');
       } else {
-        setSession(sess);
+        setSession(sess); // ✅ Fixed: Session or null
       }
-    }
+    };
 
     fetchSession();
-  }, []);
+  }, [router]);
 
   if (!session) {
-    return <p>Loading admin dashboard...</p>;
+    return <div className="p-8 text-white">Loading...</div>;
   }
 
   return (
-    <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Admin Dashboard</h1>
-      <p>Welcome, {session.user?.email}</p>
+    <div className="p-8 text-white">
+      <h1 className="text-2xl font-semibold mb-4">Admin Dashboard</h1>
+      <p className="mb-4">Welcome, {session.user?.email}</p>
+      <button
+        onClick={() => signOut()}
+        className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+      >
+        Sign Out
+      </button>
     </div>
   );
 }
