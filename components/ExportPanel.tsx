@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { PDFDownloadLink } from '@react-pdf/renderer';
-import ReportDocument from './ReportDocument';
+import ReportDocument from '@/lib/pdf/ReportDocument';
 
 interface ExportPanelProps {
   title: string;
