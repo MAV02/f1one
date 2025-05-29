@@ -1,10 +1,9 @@
-
-import { pdf } from '@react-pdf/renderer';
+import pdf from 'html2pdf.js';
 import { ref, uploadBytes } from 'firebase/storage';
-import storage from '../firebase';
-import ReportDocument from './ReportDocument'; // Importing as a component
+import { storage } from '@/lib/firebase';
+import ReportDocument from '@/components/pdf/ReportDocument';
 
-export async function generateReport({
+const generateAndUploadReport = async ({
   title,
   content,
   isPro,
@@ -14,13 +13,12 @@ export async function generateReport({
   content: string;
   isPro: boolean;
   uid: string;
-}) {
-  const blob = await pdf(
-    <ReportDocument title={title} content={content} isPro={isPro} />
-  ).toBlob();
-
+}) => {
+  const blob = await pdf(<ReportDocument title={title} content={content} isPro={isPro} />).toBlob();
   const filename = `report-${Date.now()}.pdf`;
   const storageRef = ref(storage, `exports/${uid}/${filename}`);
   await uploadBytes(storageRef, blob);
   return filename;
-}
+};
+
+export { generateAndUploadReport };
