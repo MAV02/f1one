@@ -1,47 +1,39 @@
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+
+import React from 'react';
+import { Document, Page, Text, StyleSheet } from '@react-pdf/renderer';
+
+interface Props {
+  track: string;
+  driver: string;
+}
 
 const styles = StyleSheet.create({
   page: {
-    padding: 40,
+    padding: 30,
     fontSize: 12,
-    fontFamily: 'Helvetica',
-    backgroundColor: '#ffffff',
+  },
+  title: {
+    fontSize: 18,
+    marginBottom: 10,
   },
   section: {
-    marginBottom: 20,
-  },
-  footer: {
-    position: 'absolute',
-    bottom: 20,
-    left: 40,
-    right: 40,
-    fontSize: 10,
-    textAlign: 'center',
-    color: '#999999',
-  },
-  badge: {
-    position: 'absolute',
-    bottom: 20,
-    right: 40,
-    fontSize: 10,
-    color: '#e10600',
-    fontWeight: 'bold',
+    marginBottom: 6,
   },
 });
 
-const ReportDocument = ({ title, content, isPro }: { title: string; content: string; isPro: boolean }) => (
-  <Document>
-    <Page size="A4" style={styles.page}>
-      <View style={styles.section}>
-        <Text>{title}</Text>
-      </View>
-      <View style={styles.section}>
-        <Text>{content}</Text>
-      </View>
-      <Text style={styles.footer}>Exported from https://onef1.com – {new Date().toLocaleDateString()}</Text>
-      {isPro && <Text style={styles.badge}>ONEF1 PRO</Text>}
-    </Page>
-  </Document>
-);
+const ReportDocument = ({ track, driver }: Props) => {
+  return (
+    <Document>
+      <Page size="A4" style={styles.page}>
+        <Text style={styles.title}>F1 Performance Report</Text>
+        <Text style={styles.section}>Track: {track}</Text>
+        <Text style={styles.section}>Driver: {driver}</Text>
+        <Text style={styles.section}>
+          Summary: {driver} completed a competitive stint at {track}. Telemetry and strategy data available upon request.
+        </Text>
+      </Page>
+    </Document>
+  );
+};
 
 export default ReportDocument;
