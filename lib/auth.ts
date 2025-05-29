@@ -1,5 +1,6 @@
-// lib/auth.ts
 import { DefaultSession } from "next-auth";
+import { NextAuthOptions } from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
 
 declare module "next-auth" {
   interface Session {
@@ -7,31 +8,31 @@ declare module "next-auth" {
       id: string;
     } & DefaultSession["user"];
   }
+
+  interface User {
+    id: string;
+  }
 }
-import { NextAuthOptions } from "next-auth";
-import GoogleProvider from "next-auth/providers/google";
 
 export const authOptions: NextAuthOptions = {
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
-  pages: {
-    signIn: "/account", // Adjust if your login route is different
-  },
-  session: {
-    strategy: "jwt",
-  },
   callbacks: {
-    async jwt({ token, user }) {
-      if (user) token.id = user.id;
-      return token;
-    },
     async session({ session, token }) {
-      if (token) session.user.id = token.id;
+      if (token && session.user) {
+        session.user.id = token.id as string;
+      }
       return session;
+    },
+    async jwt({ token, user }) {
+      if (user) {
+        token.id = user.id;
+      }
+      return token;
     },
   },
 };
