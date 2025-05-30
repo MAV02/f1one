@@ -1,3 +1,7 @@
+/* ✅ Tailwind Layers */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
 /* Base Reset */
 * {
@@ -43,7 +47,8 @@ button:hover {
 }
 
 /* Input Fields */
-input, textarea {
+input,
+textarea {
   background-color: #1a1a1a;
   color: #f1f1f1;
   border: 1px solid #333;

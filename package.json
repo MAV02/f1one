@@ -25,6 +25,9 @@
     "@types/micro": "^7.3.7",
     "@types/node": "^22.15.24",
     "@types/react": "^19.1.6",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.4",
+    "tailwindcss": "^4.1.8",
     "typescript": "^5.8.3"
   }
 }
