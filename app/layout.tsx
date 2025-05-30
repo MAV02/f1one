@@ -1,6 +1,6 @@
 // app/layout.tsx
 
-import './globals.css';
+import '../styles/globals.css';
 import { ReactNode } from 'react';
 import { Metadata } from 'next';
 import { Inter } from 'next/font/google';
