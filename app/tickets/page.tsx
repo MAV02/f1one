@@ -5,7 +5,9 @@ import { useEffect, useState } from 'react';
 import { getUserTickets, uploadTicketFile } from '@/lib/ticket';
 
 export default function TicketStatusPage() {
-  const { data: session } = useSession();
+  const sessionResult = useSession();
+  const session = sessionResult?.data;
+
   const [tickets, setTickets] = useState<any[]>([]);
   const [file, setFile] = useState<File | null>(null);
   const [uploading, setUploading] = useState(false);
@@ -24,6 +26,14 @@ export default function TicketStatusPage() {
     setFile(null);
     setUploading(false);
   };
+
+  if (!session) {
+    return (
+      <div className="p-6 text-center text-gray-300">
+        <h2 className="text-xl font-semibold">You must be signed in to view your tickets.</h2>
+      </div>
+    );
+  }
 
   return (
     <div className="p-4 text-white max-w-3xl mx-auto">
