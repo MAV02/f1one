@@ -3,8 +3,11 @@
 import { useSession } from 'next-auth/react';
 import Link from 'next/link';
 
+export const dynamic = 'force-dynamic'; // Prevent Next.js from pre-rendering statically
+
 export default function HomePage() {
-  const { data: session } = useSession();
+  const sessionData = useSession({ required: false });
+  const session = sessionData?.data;
 
   return (
     <main className="min-h-screen bg-black text-white flex flex-col justify-center items-center px-4 relative overflow-hidden">
